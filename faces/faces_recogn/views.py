@@ -1,32 +1,31 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from deepface import DeepFace
-from .emotions_algo import *
+from .deep_algo import *
 import cv2
 import time
+import numpy as np
 # Create your views here.
-def happy(request):
+
+
+def main_page(request):
+    return render(request, 'index.html')
+
+def new_user(request):
     cap = cv2.VideoCapture(0)
     success, img = cap.read()
-    res = face_analize(img)
-    context = {
-        'emotion': res['dominant_emotion']
-    }
-    print(context)
+    cv2.imwrite('face.png', img)
     cap.release()
     cv2.destroyAllWindows()
-    return render(request, 'index.html', context)
+    return render(request, 'new_user.html')
 
-
-
-def test(request):
+def check(request):
     cap = cv2.VideoCapture(0)
     success, img = cap.read()
-    res = face_analize(img)
+    res = face_verify(img1=img, img2='face.png')
     context = {
-        'emotion': res['dominant_emotion']
+        'res': res
     }
-    print(context)
     cap.release()
     cv2.destroyAllWindows()
-    return render(request, 'emo/index.html', context)
+    return render(request, 'check.html', context)
